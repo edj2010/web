@@ -9,11 +9,11 @@ use error::Result;
 mod threadpool;
 use threadpool::ThreadPool;
 
-use std::str::from_utf8;
-
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
+use std::{
+    io::prelude::*,
+    net::{TcpListener, TcpStream},
+    str::from_utf8,
+};
 
 const BUFFER_SIZE: usize = 65536;
 
@@ -61,7 +61,7 @@ where
         Ok(())
     }
 
-    pub fn set_internal_error_page(&mut self, response: Response) {
+    pub fn set_custom_internal_error_page(&mut self, response: Response) {
         self.internal_error_page = response;
     }
 

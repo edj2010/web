@@ -1,6 +1,4 @@
-use std::fmt::Display;
-use std::io;
-use std::str::Utf8Error;
+use std::{error::Error, fmt::Display, io, str::Utf8Error};
 
 #[derive(Debug)]
 pub enum WebServerError {
@@ -29,13 +27,25 @@ impl From<io::Error> for WebServerError {
 
 impl Display for WebServerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let string = match self {
-            Self::Utf8Error(e) => e.to_string(),
-            Self::IOError(e) => e.to_string(),
-            Self::Other(e) => e.to_string(),
-        };
-        write!(f, "{}", string)
+        match self {
+            Self::Utf8Error(e) => write!(f, "UTF8 Error: {}", e),
+            Self::IOError(e) => write!(f, "IO Error: {}", e),
+            Self::Other(e) => write!(f, "Error: {}", e),
+        }
     }
 }
 
+impl Error for WebServerError {}
+
 pub type Result<T> = std::result::Result<T, WebServerError>;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn display() {
+        let error = WebServerError::other("test error");
+        assert_eq!(error.to_string(), "Error: test error");
+    }
+}
