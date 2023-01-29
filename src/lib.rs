@@ -37,7 +37,7 @@ where
         Ok(WebServer {
             listener: TcpListener::bind(addr)?,
             workers: ThreadPool::new(worker_count),
-            internal_error_page: Response::empty_internal_server_error(),
+            internal_error_page: Response::simple_text_page(http::ResponseType::InternalServerError, "Something went wrong, the server is confused!"),
             handler,
         })
     }

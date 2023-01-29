@@ -308,22 +308,29 @@ impl Response {
         Self::serve_file(filename, ContentType::html(), ResponseType::Ok)
     }
 
-    pub fn empty_internal_server_error() -> Self {
-        let html = "
+    pub fn simple_text_page(response_type: ResponseType, custom_message: &str) -> Self {
+        let html = format!(
+            "
 <!DOCTYPE html>
 <html lang=\"en\">
 
 <head>
     <meta charset=\"utf-8\">
-    <title>Internal Server Error (500)</title>
+    <title>{} ({})</title>
 </head>
 
 <body>
-    <h1>Internal Server Error (500)</h1>
-    <p>Something went wrong! The server is confused.</p>
+    <h1>{} ({})</h1>
+    <p>{}</p>
 </body>
 
-</html>";
+</html>",
+            response_type.name(),
+            response_type.condition_code(),
+            response_type.name(),
+            response_type.condition_code(),
+            custom_message
+        );
         Response {
             which: ResponseType::InternalServerError,
             http_version: format!("{}", HTTP_VERSION),
